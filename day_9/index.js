@@ -2,7 +2,7 @@ const fs = require("fs");
 
 // part one
 function partOne() {
-  const FILENAME = "./partOneExampleInput";
+  const FILENAME = "./partOneInput";
 
   fs.readFile(FILENAME, "utf-8", (err, data) => {
     if (err) {
@@ -25,32 +25,36 @@ function partOne() {
       for (let j = 0; j < floorArray[0].length; j++) {
 
         const floorCell = floorArray[i][j];
+        
+        let lowest = true;
+
         // left
-        let leftFloorCell = j > 0 && floorArray[i][j - 1];
-        if (leftFloorCell !== 0) { // we check false explicitly because in JS 0 is falsey
-          leftFloorCell = 10;
-        }
-        // right
-        let rightFloorCell = j < floorArray[i].length && floorArray[i][j + 1];
-        if (rightFloorCell === false) {
-          rightFloorCell = 10;
+        if (j - 1 >= 0) {
+          if (floorArray[i][j - 1] <= floorCell) {
+            lowest = false;
+          }
         }
         // top
-        let topFloorCell = i > 0 && floorArray[i - 1][j];
-        if (topFloorCell === false) {
-          topFloorCell = 10;
+        if (i - 1 >= 0) {
+          if (floorArray[i - 1][j] <= floorCell) {
+            lowest = false;
+          }
+        }
+        // right
+        if (j < floorArray[0].length - 1) {
+          if (floorArray[i][j + 1] <= floorCell) {
+            lowest = false;
+          }
         }
         // bottom
-        let bottomFloorCell = i < floorArray.length - 1 && floorArray[i + 1][j];
-        if (bottomFloorCell === false) {
-          bottomFloorCell = 10;
+        if (i < floorArray.length - 1) {
+          if (floorArray[i + 1][j] <= floorCell) {
+            lowest = false;
+          }
         }
 
-        if (i === 0 && j === 9) {
+        if (lowest) {
           debugger;
-        }
-
-        if (floorCell < leftFloorCell && floorCell < rightFloorCell && floorCell < topFloorCell && floorCell < bottomFloorCell) {
           lowPoints.push(floorCell);
         }
       }
@@ -59,7 +63,13 @@ function partOne() {
     console.log({ lowPoints });
 
     // sum of low points
+    const sum = lowPoints.reduce((agg, point) => {
+      return agg += point + 1; // "risk level"
+    }, 0);
+
+    console.log({ sum });
   });
 }
 
 partOne();
+// guessed 1797 - too high
