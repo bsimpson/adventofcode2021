@@ -76,7 +76,7 @@ function partOne() {
 
 // part two
 function partTwo() {
-  const FILENAME = "./partOneExampleInput";
+  const FILENAME = "./partOneInput";
 
   fs.readFile(FILENAME, "utf-8", (err, data) => {
     if (err) {
@@ -121,31 +121,41 @@ function partTwo() {
           }
         }
         // bottom
-
+        if (i < floorArray.length - 1) {
+          if (floorArray[i + 1][j] <= floorCell) {
+            lowest = false;
+          }
+        }
 
         if (lowest) {
-          lowPointCoordinates.push([i, j]);
+          debugger;
+          lowPointCoordinates.push([i,j]);
         }
       }
     }
 
-    console.log({ lowPointCoordinates });
-    lowPointCoordinates = [ [ 0, 1 ] ]; // TODO delete me - just work on one for now
+    // console.log({ lowPointCoordinates });
 
     let coordinateSizes = [];
     for(let x = 0; x < lowPointCoordinates.length; x++) {
       coordinateSizes.push(check(lowPointCoordinates[x]));
     }
 
-    console.log({ coordinateSizes });
-    // TODO sort, take top 3, then sum
+    // console.log({ coordinateSizes });
+
+    // sort, take top 3, then sum
+    // goddamnit it I hate you Javascript sort()
+    const sorted = coordinateSizes.map(x => x.length).sort((a,b) => b - a);
+    const sliced = sorted.slice(0, 3);
+    const reduced = sliced.reduce((agg, n) => {
+      return agg * n;
+    }, 1);
+
+    console.log({ sorted, sliced, reduced });
+
 
     function check(coordinate, floodedCoordinates = []) {
       const [i, j] = coordinate;
-
-      if (i === 0 && j === 0) {
-        debugger;
-      }
 
       // break condition
       // we've already seen this before so don't recalculate
@@ -158,22 +168,25 @@ function partTwo() {
       // left
       if (j - 1 >= 0) {
         if (floorArray[i][j - 1] !== 9) {
-          return check([i, j - 1], floodedCoordinates);
+          floodedCoordinates = check([i, j - 1], floodedCoordinates);
         }
+      }
       // top
-      } else if (i - 1 >= 0) {
+      if (i - 1 >= 0) {
         if (floorArray[i - 1][j] !== 9) {
-          return check([i - 1, j], floodedCoordinates);
+          floodedCoordinates = check([i - 1, j], floodedCoordinates);
         }
+      }
       // right
-      } else if (j < floorArray[0].length - 1) {
+      if (j < floorArray[0].length - 1) {
         if (floorArray[i][j + 1] !== 9) {
-          return check([i, j + 1], floodedCoordinates);
+          floodedCoordinates = check([i, j + 1], floodedCoordinates);
         }
+      }
       // bottom
-      } else if (i < floorArray.length - 1) {
+      if (i < floorArray.length - 1) {
         if (floorArray[i + 1][j] !== 9) {
-          return check([i + 1, j], floodedCoordinates);
+          floodedCoordinates = check([i + 1, j], floodedCoordinates);
         }
       }
 
@@ -183,3 +196,4 @@ function partTwo() {
 }
 
 partTwo();
+// guessed 106392 which was too low
