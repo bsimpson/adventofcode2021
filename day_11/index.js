@@ -18,9 +18,10 @@ function partOne() {
     const maxY = octopusArray.length - 1;
     let totalFlashes = 0;
 
-    const STEP = 100;
+    const STEP = 100000000;
 
     for(let step = 0; step <= STEP; step++) {
+
       let alreadyFlashed = [];
       console.log({ step, octopusArray, totalFlashes });
 
@@ -88,6 +89,20 @@ function partOne() {
             flash(x, y);
           }
         });
+      }
+
+      let allZeroes = true;
+      for(let x = 0; x <= maxX; x++) {
+        for(let y = 0; y <= maxY; y++) {
+          if (octopusArray[x][y] !== 0) {
+            allZeroes = false;
+          }
+        }
+      }
+
+      if (allZeroes) {
+        console.log(step + 1)
+        return;
       }
     }
   });

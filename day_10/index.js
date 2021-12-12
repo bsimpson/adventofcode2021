@@ -22,54 +22,46 @@ function partOne() {
       "(((((((((())))))))))",
     ]
 
-    const lineSummaries = lines.map((line) => {
-      let delimeters = {
-        "BRACKET": 0,
-        "PAREN": 0,
-        "CURLY": 0,
-        "LESS_THAN": 0,
-      };
+    function check(charArray) {
+      let endDelimeter;
+      let rightmostDelimeterIndex;
 
-      let illegalSyntax = false;
-
-      line.split("").forEach((char, i) => {
-        // console.log({ line, delimeters, char, i });
-        switch(char) {
-          case "[":
-            delimeters.BRACKET++;
+      if (charArray[0].includes("{", "[", "(", "<")) {
+        switch(charArray[0]) {
+          case "{":
+            endDelimeter = "}";
             break;
-          case "]":
-
-            delimeters.BRACKET--;
+          case "[":
+            endDelimeter = "]";
             break;
           case "(":
-            delimeters.PAREN++;
-            break;
-          case ")":
-            delimeters.PAREN--;
-            break;
-          case "{":
-            delimeters.CURLY++;
-            break;
-          case "}":
-            delimeters.CURLY--;
+            endDelimeter = ")";
             break;
           case "<":
-            delimeters.LESS_THAN++;
-            break;
-          case ">":
-            delimeters.LESS_THAN--;
+            endDelimeter = ">";
             break;
         }
-      });
-
-      return {
-        illegalSyntax,
+      } else {
+        // this is a closing char
       }
-    });
+
+      if (rightmostDelimeterIndex === 1) {
+        // empty e.g. []
+        if (rightmostDelimeterIndex < charArray.length - 1) {
+          return check(charArray.slice(1));
+        }
+
+        return
+      }
+
+      return check(charArray.slice(1, rightmostDelimeterIndex));
+    }
+
+    const lineSummaries = lines.map((line) => {
+      return check(line);
+    })
 
     console.log({ lineSummaries });
-
   });
 }
 
